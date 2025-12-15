@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Олександр Безмощук</title>
+    <style>
+        /* --- ОСНОВНІ НАЛАШТУВАННЯ --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Тепла палітра: Золото, Бурштин, Помаранч */
+            --primary: #d97706;       /* Насичений бурштиновий */
+            --primary-dark: #b45309;  /* Темний помаранч */
+            --secondary: #fbbf24;     /* Яскравий сонячний */
+            --accent: #fffbeb;        /* Кремовий фон */
+            --bg-body: #fff7ed;       /* Персиковий фон сторінки */
+            --card-bg: #ffffff;
+            --text-main: #451a03;     /* Темно-коричневий текст */
+            --text-light: #78350f;    /* Світло-коричневий текст */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* --- НАВІГАЦІЯ --- */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.15);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--primary-dark);
+            background: #ffedd5;
+        }
+
+        nav a.active {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- ЛОГІКА ВКЛАДОК --- */
+        .page { display: none; }
+        .page.active { 
+            display: block; 
+            animation: fadeIn 0.4s ease-out; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ЗАГОЛОВКИ --- */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* --- КАРТКИ --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(180, 83, 9, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        }
+
+        .card h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px dashed #fcd34d;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* --- ІНФО СІТКА --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+
+        .info-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .info-item strong {
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- СПИСКИ ТА ЕЛЕМЕНТИ --- */
+        .list-item-styled {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .list-item-styled strong {
+            color: var(--primary-dark);
+            font-size: 1.15rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .list-item-styled p {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        ul.custom-list {
+            list-style: none;
+            margin-top: 0.5rem;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-main);
+        }
+
+        ul.custom-list li::before {
+            content: '➤';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* --- ТАБЛИЦІ --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #fcd34d;
+        }
+
+        th {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 1.2rem;
+            text-align: left;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        td {
+            background: white;
+            padding: 1.2rem;
+            border-bottom: 1px solid #fef3c7;
+            color: var(--text-main);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        /* --- ТЕГИ НАВИЧОК --- */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .skill-tag {
+            background: #fff;
+            color: var(--primary-dark);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 4px 0 var(--secondary);
+            transition: all 0.2s;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- ЛІЧИЛЬНИКИ ПРОТИДІЙ --- */
+        .countermeasure-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #fef3c7;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .countermeasure-item:hover {
+            border-color: var(--secondary);
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(217, 119, 6, 0.08);
+        }
+
+        .count-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            -webkit-text-stroke: 2px var(--primary);
+            margin-right: 1.5rem;
+            min-width: 60px;
+            text-align: right;
+            line-height: 1;
+            text-shadow: 2px 2px 0px var(--secondary);
+        }
+
+        /* Мобільна адаптація */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            nav a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+            .countermeasure-item { flex-direction: column; text-align: center; }
+            .count-number { margin-right: 0; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a class="nav-link active" data-page="info">Інформація</a></li>
+            <li><a class="nav-link" data-page="resume">Резюме</a></li>
+            <li><a class="nav-link" data-page="threats">Загрози та протидії</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <div id="info" class="page active">
+            <div class="hero">
+                <h1>Інформація</h1>
+                <p>Інформаційні технології та економічна безпека</p>
+            </div>
+
+            <div class="card">
+                <h2>👤 Особисті дані</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Студент</strong>
+                        Олександр Безмощук
+                    </div>
+                    <div class="info-item">
+                        <strong>Факультет</strong>
+                        Міжнародної торгівлі та права
+                    </div>
+                    <div class="info-item">
+                        <strong>Група</strong>
+                        1-7
+                    </div>
+                    <div class="info-item">
+                        <strong>Статус</strong>
+                        Активний студент
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📚 Дисципліна та Тема</h2>
+                <div style="background: #fffbeb; padding: 2rem; border-radius: 15px; border: 2px dashed var(--primary);">
+                    <h3 style="margin-top: 0;">Дисципліна</h3>
+                    <p>Інформаційні технології у системі забезпечення економічної безпеки держави</p>
+                    
+                    <h3 style="margin-top: 1.5rem;">Тема дослідження</h3>
+                    <p style="font-size: 1.2rem;">
+                        Аналіз економічної безпеки <strong>Російської Федерації</strong> за період 2013-2024 років
+                    </p>
+                    <p style="margin-top: 1rem; color: var(--text-light); font-size: 0.95rem;">
+                         Дослідження охоплює ключові показники: виробничу, фінансову, інвестиційну, макроекономічну, демографічну та соціальну безпеку.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="resume" class="page">
+            <div class="hero">
+                <h1>Oleksandr Bezmoshchuk</h1>
+                <p>Студент | Фрілансер | Волонтер</p>
+            </div>
+
+            <div class="card">
+                <h2>📞 Контактна інформація</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Email</strong> mokizetyi@gmail.com
+                    </div>
+                    <div class="info-item">
+                        <strong>Телефон</strong> (+380) 066 641 1279
+                    </div>
+                    <div class="info-item">
+                        <strong>Адреса</strong> вул. Милютенка 6, Попільня, 13501
+                    </div>
+                    <div class="info-item">
+                        <strong>Дата народження</strong> 1 серпня 2008
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎓 Освіта та Досвід</h2>
+                
+                <div class="list-item-styled">
+                    <strong>🎓 Попільнянський ліцей</strong>
+                    <p>Вересень 2019 - Травень 2025 (очікується)</p>
+                    <p>Локація: Попільня, Україна</p>
+                    <p style="margin-top: 5px;">
+                        <a href="https://ppl.licey.org.ua/" target="_blank" style="color: var(--primary-dark); font-weight: bold;">
+                            🌐 ppl.licey.org.ua
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="list-item-styled">
+                    <strong>💼 Фрілансер</strong>
+                    <p>Жовтень 2023 - По теперішній час</p>
+                    <p>Опис: Рекламні послуги для різних організацій</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🌍 Мовні навички</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Мова</th>
+                            <th>Розуміння</th>
+                            <th>Говоріння</th>
+                            <th>Письмо</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Українська</strong></td>
+                            <td colspan="3" style="text-align: center;">Рідна мова</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Англійська</strong></td>
+                            <td>B2</td>
+                            <td>B2</td>
+                            <td>B2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>🚀 Навички</h2>
+                <div class="skills">
+                    <span class="skill-tag">Microsoft Word</span>
+                    <span class="skill-tag">Microsoft Excel</span>
+                    <span class="skill-tag">Реклама</span>
+                    <span class="skill-tag">Комунікація</span>
+                    <span class="skill-tag">Робота в команді</span>
+                    <span class="skill-tag">Аналітичне мислення</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏆 Досягнення та нагороди</h2>
+                <div class="list-item-styled">
+                    <strong>Переможець шкільної олімпіади з економіки</strong>
+                    <p>Перше місце в районному етапі, участь в обласному турі (2023)</p>
+                </div>
+                <div class="list-item-styled">
+                    <strong>Грамота за волонтерську діяльність</strong>
+                    <p>Відзнака від міської ради за активну участь у громадських проектах (2024)</p>
+                </div>
+                <div class="list-item-styled">
+                    <strong>Сертифікат з цифрової грамотності</strong>
+                    <p>Успішне завершення курсу з основ цифрового маркетингу та SMM (2023)</p>
+                </div>
+                <div class="list-item-styled">
+                    <strong>Учасник молодіжного форуму лідерів</strong>
+                    <p>Представник Житомирської області на регіональному молодіжному форумі (2024)</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎸 Хобі та інтереси</h2>
+                
+                <h3>Музика</h3>
+                <p style="margin-bottom: 1rem;">
+                    <strong>Музична школа</strong> (Червень 2017 - Теперішній час)<br>
+                    Аматорська гра на гітарі
+                </p>
+
+                <h3>Спорт</h3>
+                <ul class="custom-list">
+                    <li>Третє місце в обласних змаганнях з баскетболу</li>
+                    <li>Срібні призери турніру з футболу "Даруємо радість дітям"</li>
+                    <li>Настільний теніс - регулярний учасник районних турнірів</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>❤️ Волонтерська діяльність</h2>
+                <p><strong>Період:</strong> Вересень 2015 - По теперішній час</p>
+                <p><strong>Локація:</strong> Попільня</p>
+                <ul class="custom-list">
+                    <li>Регулярна допомога людям похилого віку (доставка продуктів, допомога по господарству)</li>
+                    <li>Організація та проведення розважальних заходів для дітей у місцевому центрі</li>
+                    <li>Участь в екологічних акціях з прибирання територій міста</li>
+                    <li>Допомога у роботі шкільної бібліотеки (каталогізація книг, події)</li>
+                    <li>Волонтер місцевої церковної громади (організація ярмарків)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="threats" class="page">
+            <div class="hero">
+                <h1>Аналіз безпеки</h1>
+                <p>Детальний огляд викликів та стратегій</p>
+            </div>
+
+            <div class="card">
+                <h2>🚨 5 Ключових загроз</h2>
+                
+                <div class="list-item-styled" style="border-left-color: #ef4444;">
+                    <strong>1. Міжнародні санкції та ізоляція</strong>
+                    <p>Замороження $300 млрд резервів ЦБ, відключення від SWIFT та втрата ринків збуту в Європі. Заборона на імпорт високотехнологічного обладнання створює довгострокові ризики для інфраструктури та промисловості.</p>
+                </div>
+                
+                <div class="list-item-styled" style="border-left-color: #f97316;">
+                    <strong>2. Технологічна деградація</strong>
+                    <p>Критична залежність від західного ПЗ (SAP, Microsoft) та мікрочіпів. Відсутність доступу до технологій гальмує розвиток авіації, автомобілебудування та нафтогазового сектору, змушуючи використовувати застарілі аналоги або сірі схеми.</p>
+                </div>
+                
+                <div class="list-item-styled" style="border-left-color: #8b5cf6;">
+                    <strong>3. Демографічна криза та дефіцит кадрів</strong>
+                    <p>Народжуваність впала до 1.4 дитини на жінку. Внаслідок мобілізації та еміграції молодих фахівців (особливо IT) ринок праці втратив понад 1 млн осіб. Дефіцит кадрів у промисловості перевищує 40%.</p>
+                </div>
+                
+                <div class="list-item-styled" style="border-left-color: #ec4899;">
+                    <strong>4. Інфляція та волатильність рубля</strong>
+                    <p>Офіційна інфляція складає 9%, але реальна інфляція споживчого кошика сягає 20-30%. Слабкий рубль здорожчує критичний імпорт, знижуючи купівельну спроможність населення та рівень життя.</p>
+                </div>
+                
+                <div class="list-item-styled" style="border-left-color: #06b6d4;">
+                    <strong>5. Структурний перекіс економіки (Військові витрати)</strong>
+                    <p>Рекордні 8% ВВП (близько 40% бюджету) спрямовуються на військово-промисловий комплекс. Це "висмоктує" ресурси з освіти, медицини та цивільної інфраструктури, створюючи ефект штучного перегріву економіки.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🛡️ Детальні методи протидії</h2>
+                
+                <div class="countermeasure-item">
+                    <div class="count-number">01</div>
+                    <div>
+                        <strong>Фінансова стабілізація (ФНД)</strong>
+                        <p style="font-size: 0.95rem; margin-top: 5px;">Використання ліквідної частини Фонду національного добробуту для покриття дефіциту бюджету. Продаж золота та юанів для підтримки курсу.</p>
+                    </div>
+                </div>
+                
+                <div class="countermeasure-item">
+                    <div class="count-number">02</div>
+                    <div>
+                        <strong>Імпортозаміщення та паралельний імпорт</strong>
+                        <p style="font-size: 0.95rem; margin-top: 5px;">Спроби налагодити власне виробництво (літаки МС-21, автопром) та легалізація ввезення товарів без згоди правовласників через треті країни.</p>
+                    </div>
+                </div>
+                
+                <div class="countermeasure-item">
+                    <div class="count-number">03</div>
+                    <div>
+                        <strong>Геополітичний розворот на Схід</strong>
+                        <p style="font-size: 0.95rem; margin-top: 5px;">Перенаправлення експорту нафти та газу до Китаю та Індії (часто з дисконтом). Перехід на розрахунки в національних валютах для обходу доларової системи.</p>
+                    </div>
+                </div>
+                
+                <div class="countermeasure-item">
+                    <div class="count-number">04</div>
+                    <div>
+                        <strong>Жорстка монетарна політика</strong>
+                        <p style="font-size: 0.95rem; margin-top: 5px;">Центральний банк підняв ключову ставку до 21% для охолодження попиту та боротьби з інфляцією, що робить кредити для бізнесу майже недоступними.</p>
+                    </div>
+                </div>
+                
+                <div class="countermeasure-item">
+                    <div class="count-number">05</div>
+                    <div>
+                        <strong>Соціальна підтримка населення</strong>
+                        <p style="font-size: 0.95rem; margin-top: 5px;">Індексація пенсій, виплати материнського капіталу та високі виплати контрактникам для стимулювання лояльності та підтримки попиту в регіонах.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Ефективність заходів</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Метод</th>
+                            <th>Оцінка ефективності</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Фінансова стабілізація</td>
+                            <td style="color: #d97706; font-weight: bold;">Середня (Ресурси вичерпні)</td>
+                        </tr>
+                        <tr>
+                            <td>Імпортозаміщення</td>
+                            <td style="color: #dc2626; font-weight: bold;">Низька (Технологічне відставання)</td>
+                        </tr>
+                        <tr>
+                            <td>Переорієнтація торгівлі</td>
+                            <td style="color: #16a34a; font-weight: bold;">Висока (Врятувало експорт)</td>
+                        </tr>
+                        <tr>
+                            <td>Контроль інфляції</td>
+                            <td style="color: #dc2626; font-weight: bold;">Низька (Ціни продовжують рости)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" style="background: #fffbeb; border-color: var(--secondary);">
+                <h2>🔮 Висновки та прогнози</h2>
+                <p style="margin-bottom: 1rem;">
+                    Економіка РФ продемонструвала адаптивність завдяки накопиченим резервам, але увійшла в стадію структурної деградації.
+                </p>
+                <ul class="custom-list">
+                    <li><strong>Прогноз 2025:</strong> Ризик стагфляції (висока інфляція + низький ріст 0.5%).</li>
+                    <li><strong>Головний ризик:</strong> Вичерпання фондів та неможливість замінити західне промислове обладнання, що почне ламатися.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-page');
+                    
+                    pages.forEach(page => page.classList.remove('active'));
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+
+                    const targetPage = document.getElementById(targetId);
+                    if (targetPage) targetPage.classList.add('active');
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
